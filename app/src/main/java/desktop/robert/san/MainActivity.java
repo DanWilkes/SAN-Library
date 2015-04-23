@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 
 
     private ResponseReceiver receiver;
-    //private boolean isRegistered = false;
+    private boolean isRegistered = false;
     //The inputMsg correspond to spinnerContents ordering. Very important that it remain so.
     //public enum inputMsg {getBroadcastAddress, receiveBroadcast, sendBroadcast,
         //getWifiIP, sendUDP, receiveUDP,
@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter);
         //Boolean suggested by JunR. I assume it's redundant
-        //isRegistered = true;
+        isRegistered = true;
         Log.d("MainTag", "Reached onCreate End");
     }
 
@@ -64,11 +64,11 @@ public class MainActivity extends Activity {
     protected void onPause()
     {
         Log.d("MainTag", "Reached onPause Started");
-        //if (isRegistered)
-        //{
+        if (isRegistered)
+        {
             unregisterReceiver(receiver);
-            //isRegistered = false;
-        //}
+            isRegistered = false;
+        }
         super.onPause();
         Log.d("MainTag", "Reached onPause End");
     }
@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
     protected void onStop()
     {
         Log.d("MainTag", "Reached onStop Started");
-        //if(isRegistered)
+        if(isRegistered)
             unregisterReceiver(receiver);
         super.onStop();
         Log.d("MainTag", "Reached onStop End");
