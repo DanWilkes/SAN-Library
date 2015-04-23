@@ -10,6 +10,7 @@ package desktop.robert.simplifiedandroidnetworking;
         import android.net.DhcpInfo;
         import android.net.wifi.WifiManager;
         import android.util.Log;
+        import android.widget.Toast;
 
         import java.io.BufferedReader;
         import java.io.BufferedWriter;
@@ -46,6 +47,7 @@ public class NetworkingServices extends IntentService
     public static final String ACTION_RESP = "desktop.robert.simplifiedandroidnetworking";
 
 
+    //Change this to be your own unique message, something such as the application name
     private String discoveryMessage = "Unique Message";
     //TODO Make get and set methods for this;
     private int defaultBufferSize = 500;
@@ -342,11 +344,13 @@ public class NetworkingServices extends IntentService
      */
     public void receiveBroadcast(int port, String compare)
     {
-        discovering = true;
+        //discovering = true;
         byte[] buffer = new byte[defaultBufferSize];
         String deviceList = "";
-        while(discovering)
-        {
+
+        Log.d("ServiceTag", "ReceiveBroadcast buffer created, beginning discovery.");
+        //while(discovering)
+        //{
             receiveUDPPacket(10000, port, buffer, defaultBufferSize);
             String[] msg = (new String(buffer)).split("\n");
             try
@@ -357,10 +361,9 @@ public class NetworkingServices extends IntentService
             { e.printStackTrace(); }
             //TODO This is only for testing purposes.
             // As long as at 1 packet has been discovered, stop checking.
-            if(!deviceList.equals(""))
-                discovering = false;
-        }
-
+            //if(!deviceList.equals(""))
+                //discovering = false;
+        //}
         sendIntent(deviceList);
     }
 
