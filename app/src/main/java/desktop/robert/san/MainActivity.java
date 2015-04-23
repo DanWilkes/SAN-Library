@@ -23,8 +23,7 @@ public class MainActivity extends Activity {
 
 
     private ResponseReceiver receiver;
-    private boolean isRegistered = false;
-    private boolean sending = false;
+    //private boolean isRegistered = false;
     //The inputMsg correspond to spinnerContents ordering. Very important that it remain so.
     //public enum inputMsg {getBroadcastAddress, receiveBroadcast, sendBroadcast,
         //getWifiIP, sendUDP, receiveUDP,
@@ -55,7 +54,7 @@ public class MainActivity extends Activity {
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter);
         //Boolean suggested by JunR. I assume it's redundant
-        isRegistered = true;
+        //isRegistered = true;
         Log.d("MainTag", "Reached onCreate End");
     }
 
@@ -65,11 +64,11 @@ public class MainActivity extends Activity {
     protected void onPause()
     {
         Log.d("MainTag", "Reached onPause Started");
-        if (isRegistered)
-        {
+        //if (isRegistered)
+        //{
             unregisterReceiver(receiver);
-            isRegistered = false;
-        }
+            //isRegistered = false;
+        //}
         super.onPause();
         Log.d("MainTag", "Reached onPause End");
     }
@@ -78,7 +77,7 @@ public class MainActivity extends Activity {
     protected void onStop()
     {
         Log.d("MainTag", "Reached onStop Started");
-        if(isRegistered)
+        //if(isRegistered)
             unregisterReceiver(receiver);
         super.onStop();
         Log.d("MainTag", "Reached onStop End");
@@ -102,21 +101,21 @@ public class MainActivity extends Activity {
         return (id == R.id.action_settings) || super.onOptionsItemSelected(item);
     }
 
+
+    /**
+     * This particular application uses a spinner to get the requested operation, but your
+     * application will likely do things in a different way.
+     * @param v The view is not used but appears to be required
+     */
     public void onClickStartService(View v)
     {
-        //TODO Check which option in the spinner has been selected, call the corresponding method
-
         Log.d("Main Tag", "Reached onClickStartService Start");
         startNetwork(NetworkingServices.inputMsg.values()[((Spinner)findViewById(R.id.spinner)).getSelectedItemPosition()]);
-
         Log.d("Main Tag", "Reached onClickStartService End");
-        //String selected = (String)((Spinner)findViewById(R.id.spinner)).getSelectedItem();
-        //((TextView)findViewById(R.id.PayloadText)).setText(selected + " "
-        //        + ((Spinner)findViewById(R.id.spinner)).getSelectedItemPosition());
     }
 
     /**
-     * Starts the Networking Service. Nicely removes a few extra lines of code
+     * Starts the Networking Service.
      * @param msg The action you want the service to perform.
      */
     private void startNetwork(NetworkingServices.inputMsg msg)
@@ -156,6 +155,10 @@ public class MainActivity extends Activity {
     public class ResponseReceiver extends BroadcastReceiver
     {
 
+        /**
+         * @param context Not used, but appears to be required
+         * @param intent The message is encoded in this intent
+         */
         @Override
         public void onReceive(Context context, Intent intent)
         {
@@ -164,6 +167,7 @@ public class MainActivity extends Activity {
             ((TextView) findViewById(R.id.PayloadText)).setText(
                     intent.getStringExtra(NetworkingServices.PARAM_OUT_MSG));
 
+            //Can be commented out, for debugging purposes on the device
             Toast.makeText(getBaseContext(), "Service Replied", Toast.LENGTH_SHORT).show();
 
             Log.d("Response Receiver", "Reached RR End");
