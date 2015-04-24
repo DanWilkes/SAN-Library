@@ -49,7 +49,6 @@ public class NetworkingServices extends IntentService
 
     //Change this to be your own unique message, something such as the application name
     private String discoveryMessage = "Unique Message";
-    //TODO Make get and set methods for this;
     private int defaultBufferSize = 500;
     private boolean connected = false;
     private ServerSocket servSock = null;
@@ -68,6 +67,10 @@ public class NetworkingServices extends IntentService
         super("NetworkingServices");
     }
 
+
+    public int getDefaultBufferSize() { return defaultBufferSize; }
+
+    public void setDefaultBufferSize(int defaultBufferSize) { this.defaultBufferSize = defaultBufferSize; }
 
     /**
      * Intents are send back and forth to communicate between threads.
@@ -105,6 +108,7 @@ public class NetworkingServices extends IntentService
     @Override
     protected void onHandleIntent(Intent intent)
     {
+
         Log.d("ServiceTag", "onHandleIntent Start");
         inputMsg msg = inputMsg.failed;
         String payload = "";
@@ -114,6 +118,7 @@ public class NetworkingServices extends IntentService
 
         //Check which extras have been included in this received intent.
         try
+
         {
             if (intent.hasExtra(PARAM_IN_MSG))
                 msg = (inputMsg) intent.getSerializableExtra(PARAM_IN_MSG);
@@ -125,8 +130,10 @@ public class NetworkingServices extends IntentService
                 ip = intent.getStringExtra(PARAM_IN_IP);
             if (intent.hasExtra(PARAM_IN_TIMEOUT))
                 timeout = intent.getIntExtra(PARAM_IN_TIMEOUT, timeout);
-        }
-        catch(ClassCastException e)
+        } catch (
+                ClassCastException e
+                )
+
         {
             Log.d("ERROR", "Something went wrong with trying to get extra from message "
                     + e.getMessage());
@@ -137,6 +144,7 @@ public class NetworkingServices extends IntentService
         //"Get Wifi IP", "Send UDP Packet", "Receive UDP",
         //"Send TCP Packet", "Receive TCP Packet", "Start TCP Server"}
         switch (msg)
+
         {
             case getBroadcastAddress:
                 Log.d("ServiceTag", "IMSG Found - getBroadcastAddr");
@@ -207,7 +215,9 @@ public class NetworkingServices extends IntentService
                 Log.d("ServiceTag", "IMSG not found: " + msg);
                 break;
         }
+
         Log.d("ServiceTag", "onHandleIntent End");
+
     }
 
     /**
@@ -354,13 +364,15 @@ public class NetworkingServices extends IntentService
         receiveUDPPacket(10000, port, buffer, defaultBufferSize);
         String[] msg = (new String(buffer)).split("\n");
         try
-        {
+        {//TODO this is garbage code, fix this
             if (msg[0].equals(compare))
                 deviceList += "\n" + msg[1];
         } catch(ArrayIndexOutOfBoundsException e)
         { e.printStackTrace(); }
         //TODO This only capture a single device, need to find a way to 'capture' more devices
 
+        if(deviceList == "")
+            deviceList = "No devices found.";
         sendIntent(deviceList);
     }
 

@@ -32,8 +32,8 @@ public class MainActivity extends Activity {
 
     private String spinnerContents[] = {"Get Broadcast Address", "Receive Broadcast",
             "Send Broadcast", "Get Wifi IP", "Send UDP Packet", "Receive UDP Packet",
-            "Send TCP Packet", "Receive TCP Packet", "Start TCP Server", "discover",
-            "declare"};
+            "Send TCP Packet", "Receive TCP Packet", "Start TCP Server", "Discover",
+            "Declare"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -106,12 +106,26 @@ public class MainActivity extends Activity {
     /**
      * This particular application uses a spinner to get the requested operation, but your
      * application will likely do things in a different way.
+     * It is called by the SELECT button
      * @param v The view is not used but appears to be required
      */
     public void onClickStartService(View v)
     {
         Log.d("Main Tag", "Reached onClickStartService Start");
-        startNetwork(NetworkingServices.inputMsg.values()[((Spinner)findViewById(R.id.spinner)).getSelectedItemPosition()]);
+
+
+        //This is my feeble attempt at making threads, it runs but doesn't work.
+        Runnable runner = new Runnable()
+        {
+            public void run()
+            {
+                startNetwork(NetworkingServices.inputMsg.values()[((Spinner) findViewById(R.id.spinner)).getSelectedItemPosition()]);
+            }
+        };
+
+        Thread t = new Thread(runner);
+        t.start();
+
         Log.d("Main Tag", "Reached onClickStartService End");
     }
 
@@ -143,6 +157,7 @@ public class MainActivity extends Activity {
         {
             Log.d("Main Tag", "No Payload Sent: " + msg);
         }
+
 
         this.startService(intent);
 
