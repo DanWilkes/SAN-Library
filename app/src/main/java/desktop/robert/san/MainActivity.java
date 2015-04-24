@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
         registerReceiver(receiver, filter);
         //Boolean suggested by JunR. I assume it's redundant
         isRegistered = true;
+
         Log.d("MainTag", "Reached onCreate End");
     }
 

@@ -97,7 +97,8 @@ public class NetworkingServices extends IntentService
 
 
     /**
-     * This is never called by the user. The user calls start(intent), this is called automatically.
+     * This is never called by the user. The user calls startService(intent),
+     * this is called automatically.
      *
      * @param intent The intent that has been received.
      */
@@ -349,21 +350,17 @@ public class NetworkingServices extends IntentService
         String deviceList = "";
 
         Log.d("ServiceTag", "ReceiveBroadcast buffer created, beginning discovery.");
-        //while(discovering)
-        //{
-            receiveUDPPacket(10000, port, buffer, defaultBufferSize);
-            String[] msg = (new String(buffer)).split("\n");
-            try
-            {
-                if (msg[0].equals(compare))
-                    deviceList += "\n" + msg[1];
-            } catch(ArrayIndexOutOfBoundsException e)
-            { e.printStackTrace(); }
-            //TODO This is only for testing purposes.
-            // As long as at 1 packet has been discovered, stop checking.
-            //if(!deviceList.equals(""))
-                //discovering = false;
-        //}
+
+        receiveUDPPacket(10000, port, buffer, defaultBufferSize);
+        String[] msg = (new String(buffer)).split("\n");
+        try
+        {
+            if (msg[0].equals(compare))
+                deviceList += "\n" + msg[1];
+        } catch(ArrayIndexOutOfBoundsException e)
+        { e.printStackTrace(); }
+        //TODO This only capture a single device, need to find a way to 'capture' more devices
+
         sendIntent(deviceList);
     }
 
