@@ -53,7 +53,7 @@ public class MainActivity extends Activity {
         filter.addCategory(Intent.CATEGORY_DEFAULT);
         receiver = new ResponseReceiver();
         registerReceiver(receiver, filter);
-        //Boolean suggested by JunR. I assume it's redundant
+        //Boolean suggested by JunR. I assume it's redundant, but application crashes without it
         isRegistered = true;
 
         Log.d("MainTag", "Reached onCreate End");
@@ -112,20 +112,7 @@ public class MainActivity extends Activity {
     public void onClickStartService(View v)
     {
         Log.d("Main Tag", "Reached onClickStartService Start");
-
-
-        //This is my feeble attempt at making threads, it runs but doesn't work.
-        Runnable runner = new Runnable()
-        {
-            public void run()
-            {
-                startNetwork(NetworkingServices.inputMsg.values()[((Spinner) findViewById(R.id.spinner)).getSelectedItemPosition()]);
-            }
-        };
-
-        Thread t = new Thread(runner);
-        t.start();
-
+        startNetwork(NetworkingServices.inputMsg.values()[((Spinner) findViewById(R.id.spinner)).getSelectedItemPosition()]);
         Log.d("Main Tag", "Reached onClickStartService End");
     }
 
@@ -151,7 +138,8 @@ public class MainActivity extends Activity {
                 || msg.equals(NetworkingServices.inputMsg.sendUDP))
         {
             Log.d("Main Tag", "Building Intent: " + msg);
-            intent.putExtra(NetworkingServices.PARAM_IN_PAYLOAD, ((TextView)findViewById(R.id.PayloadText)).getText().toString());
+            intent.putExtra(NetworkingServices.PARAM_IN_PAYLOAD,
+                    ((TextView)findViewById(R.id.PayloadText)).getText().toString());
         }
         else
         {
@@ -159,8 +147,8 @@ public class MainActivity extends Activity {
         }
 
 
-        this.startService(intent);
-
+        startService(intent);
+        //selfStop() is called internally, no need to call it here
         Log.d("Main Tag", "Reached startNetwork End");
     }
 
